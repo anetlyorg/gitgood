@@ -9,9 +9,14 @@ const userController = {};
 
 // add user to database
 userController.addUser = async (req, res, next) => {
-  const username = res.locals.profile.login;
-  const email = res.locals.profile.email;
-  const token = res.locals.access_token;
+  // const username = res.locals.profile.login;
+  // const email = res.locals.profile.email;
+  // const token = res.locals.access_token;
+
+  const username = req.body.login;
+  const email = req.body.email;
+  const token = req.body.access_token;
+
   try {
     const sqlQuery = `
     INSERT INTO Users (username, email, token)
