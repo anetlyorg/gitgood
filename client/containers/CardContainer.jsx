@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Card from '../components/Card.jsx';
 import ExpandedCard from '../components/ExpandedCard.jsx';
 import { Button } from '@mui/material';
+import {DragDropContext} from 'react-beautiful-dnd'
+import { Droppable } from 'react-beautiful-dnd';
 
 function CardContainer(props) {
   const [ buttonPopup, setButtonPopup ] = useState(false);
@@ -23,7 +25,13 @@ function CardContainer(props) {
       </Button>
 
       <div className='subtopicsContainer'>
-        {cardsFeed}
+				<DragDropContext>
+					<Droppable>
+						{(provided) => {
+							{cardsFeed}
+						}}
+					</Droppable>
+				</DragDropContext>
         <ExpandedCard 
           trigger={buttonPopup} 
           setTrigger={setButtonPopup}
