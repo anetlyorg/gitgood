@@ -1,92 +1,127 @@
-import React, { useState, useEffect } from 'react';
-// import './ExpandedCard.css';
+import React, { useState, useEffect, useContext } from 'react';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import { TopicContext } from '../App';
 
-function ExpandedCard(props) {
+function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
+  //1) Configure inputs
+  const [inputs, setInputs] = useState(currentCard);
+  const { currentTopicId } = useContext(TopicContext);
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setInputs((values) => ({ ...values, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.setTrigger(false);
-    if(props.currentCardId) {
-      props.updateCard(props.currentCardId);
+    if (currentCard.id) {
+      updateCard(currentCard.id);
+    } else {
+      addCard();
     }
-    else {
-      props.addCard();
-    }
-  };
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    console.log(event);
-    // props.emojiTextEntry()
+    setInputs(null);
+    setCurrentCard(null);
   };
 
-  const handleClose = (event) => {
-    setAnchorEl(null);
-    console.log('SET TEXT VALUE HERE');
-    console.log(event.target.innerText);
-    props.emojiTextEntry(event.target.innerText);
+  //2) Add a card
+  const addCard = () => {
+    fetch('http://localhost:3000/api/subtopic/', {
+      method: 'Post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        topic_id: currentTopicId,
+        title: inputs.title,
+        emoji: inputs.emoji,
+        text: inputs.text,
+      }),
+    })
+      .then((newCardJSON) => newCardJSON.json())
+      .then((newCard) => {
+        setCards([...cards, newCard]);
+      });
   };
 
-  return (props.trigger) ? (
-    <div className="ExpandedCard">
-      <div className="ExpandedCard-inner">
-        <Button className="close-btn" onClick={() => props.setTrigger(false)}>close</Button>
-        <Button
-          id="basic-button"
-          aria-controls={open ? 'basic-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          onClick={handleClick}
-        >
-        Select Emoji
-        </Button>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
-          <MenuItem onClick={handleClose}>😂</MenuItem>
-          <MenuItem onClick={handleClose}>🤨</MenuItem>
-          <MenuItem onClick={handleClose}>😎</MenuItem>
-          <MenuItem onClick={handleClose}>❤️‍🔥</MenuItem>
-          <MenuItem onClick={handleClose}>😞</MenuItem>
-          <MenuItem onClick={handleClose}>🤬</MenuItem>
-        </Menu>
-        <form action='' onSubmit={handleSubmit}>
-          <TextField 
-            size='small'
-            sx={{ m: 0.1 }} 
-            type='text' 
-            className='emojiBody'
-            placeholder='emoji...' 
-            onChange={(e) => props.emojiTextEntry(e)} 
-            value={props.emojiText}
-          /> 
-          <TextField 
-            size="small" 
-            sx={{ m: 3 }}
-            type='text' 
-            className='titleBody' 
-            placeholder='Add subtopic title...' 
-            onChange={(e) => props.cardTextEntry(e)} 
-            value={props.cardText}
-          />
-          <br></br>
-          <textarea type='text' className='subtopicBody' placeholder='Add subtopic body...' onChange={(e) => props.bodyTextEntry(e)} value={props.bodyText}/><br></br>
-          <Button variant="contained" type='submit' className='submitButtons' value="Save Subtopic">Save Subtopic</Button>
-        </form>
+  //3) Update a card
+  const updateCard = (card_id) => {
+    fetch('http://localhost:3000/api/subtopic/', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        _id: currentCard.id,
+        title: inputs.title,
+        emoji: inputs.emoji,
+        text: inputs.text,
+      }),
+    })
+      .then((updatedCardJSON) => updatedCardJSON.json())
+      .then((updatedCard) => {
+        const cardsCopy = [...cards];
+        let index;
+        cardsCopy.forEach((card, i) => {
+          if (card._id === currentCard.id) index = i;
+        });
+        cardsCopy[index] = updatedCard;
+        setCards(cardsCopy);
+      });
+  };
+
+  return (
+    currentCard && (
+      <div className="ExpandedCard">
+        <div className="ExpandedCard-inner">
+          <Button className="close-btn" onClick={() => setCurrentCard(null)}>
+            close
+          </Button>
+          <form action="" onSubmit={handleSubmit}>
+            <TextField
+              size="small"
+              sx={{ m: 0.1 }}
+              type="text"
+              className="emojiBody"
+              placeholder="Select emoji..."
+              name="emoji"
+              onChange={handleChange}
+              value={inputs?.emoji || ''}
+            />{' '}
+            <TextField
+              size="small"
+              sx={{ m: 3 }}
+              type="text"
+              className="titleBody"
+              placeholder="Add subtopic title..."
+              name="title"
+              onChange={handleChange}
+              value={inputs?.title || ''}
+            />
+            <br></br>
+            <textarea
+              type="text"
+              className="subtopicBody"
+              placeholder="Add subtopic body..."
+              name="text"
+              onChange={handleChange}
+              value={inputs?.text || ''}
+            />
+            <br></br>
+            <Button
+              variant="contained"
+              type="submit"
+              className="submitButtons"
+              value="Save Subtopic"
+            >
+              Save Subtopic
+            </Button>
+          </form>
+        </div>
       </div>
-    </div>
-  ) : '';
+    )
+  );
 }
-// sx={{ m: 0.5 }}
+
 export default ExpandedCard;
