@@ -2,80 +2,57 @@ import React, { useState, useEffect, useContext } from "react";
 import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
 import { TopicContext } from "../App";
+import {
+  postSubtopic,
+  updateCurrentSubtopic,
+  updateSubtopic,
+} from "../store/stateSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
-  //1) Configure inputs
-  const [inputs, setInputs] = useState(currentCard);
-  const { currentTopicId } = useContext(TopicContext);
+function ExpandedCard() {
+  const dispatch = useDispatch();
+  const { currentTopicId, currentSubtopic, subtopics } = useSelector(
+    (state) => state.app
+  );
 
+  const [newSubtopic, setNewSubtopic] = useState(currentSubtopic);
+
+  useEffect(() => setNewSubtopic(currentSubtopic), [currentSubtopic]);
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setInputs((values) => ({ ...values, [name]: value }));
+    setNewSubtopic((values) => ({ ...values, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (currentCard.id) {
-      updateCard(currentCard.id);
+    if (currentSubtopic._id) {
+      updateCard();
     } else {
       addCard();
     }
-    setInputs(null);
-    setCurrentCard(null);
+    setNewSubtopic(null);
+    dispatch(updateCurrentSubtopic(null));
   };
 
-  //2) Add a card
-  const addCard = () => {
-    fetch("http://localhost:3000/api/subtopic/", {
-      method: "Post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        topic_id: currentTopicId,
-        title: inputs.title,
-        emoji: inputs.emoji,
-        text: inputs.text,
-      }),
-    })
-      .then((newCardJSON) => newCardJSON.json())
-      .then((newCard) => {
-        setCards([...cards, newCard]);
-      });
+  //Add a Subtopic
+  const addCard = async () => {
+    await dispatch(postSubtopic({ currentTopicId, newSubtopic }));
   };
 
-  //3) Update a card
-  const updateCard = (card_id) => {
-    fetch("http://localhost:3000/api/subtopic/", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        _id: currentCard.id,
-        title: inputs.title,
-        emoji: inputs.emoji,
-        text: inputs.text,
-      }),
-    })
-      .then((updatedCardJSON) => updatedCardJSON.json())
-      .then((updatedCard) => {
-        const cardsCopy = [...cards];
-        let index;
-        cardsCopy.forEach((card, i) => {
-          if (card._id === currentCard.id) index = i;
-        });
-        cardsCopy[index] = updatedCard;
-        setCards(cardsCopy);
-      });
+  //Update a Subtopic
+  const updateCard = async (card_id) => {
+    await dispatch(updateSubtopic(newSubtopic));
   };
 
   return (
-    currentCard && (
+    currentSubtopic && (
       <div className="ExpandedCard">
         <div className="ExpandedCard-inner">
-          <Button className="close-btn" onClick={() => setCurrentCard(null)}>
+          <Button
+            className="close-btn"
+            onClick={() => dispatch(updateCurrentSubtopic(null))}
+          >
             close
           </Button>
           <form action="" onSubmit={handleSubmit}>
@@ -87,7 +64,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
               placeholder="Select emoji..."
               name="emoji"
               onChange={handleChange}
-              value={inputs?.emoji || ""}
+              value={newSubtopic?.emoji || ""}
             />{" "}
             <TextField
               size="small"
@@ -97,7 +74,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
               placeholder="Add subtopic title..."
               name="title"
               onChange={handleChange}
-              value={inputs?.title || ""}
+              value={newSubtopic?.title || ""}
             />
             <br></br>
             <textarea
@@ -106,7 +83,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
               placeholder="Add subtopic body..."
               name="text"
               onChange={handleChange}
-              value={inputs?.text || ""}
+              value={newSubtopic?.text || ""}
             />
             <br></br>
             <Button

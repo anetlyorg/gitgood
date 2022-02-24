@@ -5,14 +5,10 @@ import Dashboard from "./containers/Dashboard.jsx";
 export const TopicContext = React.createContext();
 
 function App() {
-  const [currentTopicId, setCurrentTopicId] = useState("1");
   return (
     <div className="App">
       <CssBaseline />
-      <TopicContext.Provider value={{ currentTopicId, setCurrentTopicId }}>
-        <Dashboard />
-      </TopicContext.Provider>
-      ;
+      <Dashboard />
     </div>
   );
 }

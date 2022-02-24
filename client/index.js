@@ -3,6 +3,8 @@ import { render } from "react-dom";
 import App from "./App";
 import "@fontsource/roboto";
 import { store } from "./store/store";
+import styles from "./stylesheets/styles.scss";
+
 import { Provider } from "react-redux";
 
 render(

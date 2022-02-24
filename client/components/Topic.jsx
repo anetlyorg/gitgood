@@ -1,32 +1,30 @@
 import React, { useContext } from "react";
 import { Button } from "@mui/material";
 import { TopicContext } from "../App";
+import { updateCurrentTopicId } from "../store/stateSlice";
+import { useDispatch } from "react-redux";
+import { deleteTopic } from "../store/stateSlice";
 
-function Topic({ topic_id, topic, setTopics, topics }) {
-  const { setCurrentTopicId } = useContext(TopicContext);
+function Topic({ topic }) {
+  const dispatch = useDispatch();
 
-  const deleteTopic = (topic_id) => {
-    fetch(`http://localhost:3000/api/topic/${topic_id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((data) => {
-      const topicsCopy = { ...topics };
-      delete topicsCopy[topic_id];
-      setTopics(topicsCopy);
-    });
-  };
+  const { _id, topic_name } = topic;
 
   return (
     <div className="Topic">
       <h3 style={{ cursor: "pointer" }}>
-        <span onClick={() => setCurrentTopicId(topic_id)}>{topic}</span>
+        <span
+          onClick={() => {
+            dispatch(updateCurrentTopicId(_id));
+          }}
+        >
+          {topic_name}
+        </span>
         <Button
           variant="text"
           size="small"
           className="deleteButtons"
-          onClick={() => deleteTopic(topic_id)}
+          onClick={() => dispatch(deleteTopic(_id))}
         >
           X
         </Button>

@@ -2,69 +2,37 @@ import React, { useEffect, useState } from "react";
 import Topic from "../components/Topic.jsx";
 import { Button } from "@mui/material";
 import { TextField } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { getTopics, postTopic } from "../store/stateSlice";
 
 function Topics() {
-  //1) Get topics
-  const [topics, setTopics] = useState({});
-
-  useEffect(() => {
-    getTopics();
+  //get topics
+  const topics = useSelector((state) => state.app.topics);
+  const dispatch = useDispatch();
+  useEffect(async () => {
+    await dispatch(getTopics());
   }, []);
 
-  function getTopics() {
-    const url = "http://localhost:3000/api/topic";
-    fetch(url)
-      .then((topicsJSON) => {
-        return topicsJSON.json();
-      })
-      .then((topics) => {
-        setTopics(topics);
-      })
-      .catch((err) => console.log("err", err));
-  }
-
-  const topicsFeed = [];
-  for (const topic_id in topics) {
-    topicsFeed.push(
-      <Topic
-        key={topic_id}
-        topic_id={topic_id}
-        topic={topics[topic_id]}
-        setTopics={setTopics}
-        topics={topics}
-      />
-    );
-  }
-
-  //2) Handle new topic
+  //handle input
   const [input, setInput] = useState("");
-
   const handleChange = (e) => {
     setInput(e.target.value);
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch("http://localhost:3000/api/topic", {
-      method: "Post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        topic_name: input,
-      }),
-    })
-      .then((newTopicJSON) => newTopicJSON.json())
-      .then((newTopic) => {
-        setTopics({ ...topics, [newTopic._id]: newTopic.topic_name });
-        setInput("");
-      });
+    await dispatch(postTopic(input));
+    setInput("");
   };
 
   return (
     <div className="Nav">
+      <button
+        onClick={() => {
+          dispatch(getTopics());
+        }}
+      ></button>
       <h2>Topics</h2>
-      <form action="" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <TextField
           sx={{ m: 0.5 }}
           size="small"
@@ -85,7 +53,10 @@ function Topics() {
         </Button>
       </form>
       <br></br>
-      {topicsFeed}
+      {topics &&
+        topics.map((topic) => (
+          <Topic key={topic.topic_id} topic={topic}></Topic>
+        ))}
     </div>
   );
 }
