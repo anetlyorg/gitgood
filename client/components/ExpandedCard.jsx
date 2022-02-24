@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import { TopicContext } from '../App';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
   //1) Configure inputs
@@ -70,7 +72,15 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
         setCards(cardsCopy);
       });
   };
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    console.log(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     currentCard && (
       <div className="ExpandedCard">
@@ -78,6 +88,28 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
           <Button className="close-btn" onClick={() => setCurrentCard(null)}>
             close
           </Button>
+          <Button
+            id="basic-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={handleClick}
+          >
+        Emoji
+          </Button>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              'aria-labelledby': 'basic-button',
+            }}
+          >
+            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={handleClose}>Logout</MenuItem>
+          </Menu>
           <form action="" onSubmit={handleSubmit}>
             <TextField
               size="small"
