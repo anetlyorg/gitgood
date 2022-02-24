@@ -14,6 +14,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
     const name = e.target.name;
     const value = e.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
+    // console.log(inputs);
   };
 
   const handleSubmit = (e) => {
@@ -72,6 +73,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
         setCards(cardsCopy);
       });
   };
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -81,6 +83,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     currentCard && (
       <div className="ExpandedCard">
@@ -88,39 +91,15 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
           <Button className="close-btn" onClick={() => setCurrentCard(null)}>
             close
           </Button>
-          <Button
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-          >
-        Emoji
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button',
-            }}
-          >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
-          </Menu>
-          <form action="" onSubmit={handleSubmit}>
-            <TextField
-              size="small"
-              sx={{ m: 0.1 }}
-              type="text"
-              className="emojiBody"
-              placeholder="Select emoji..."
-              name="emoji"
-              onChange={handleChange}
-              value={inputs?.emoji || ''}
-            />{' '}
+          <form className="emojiform" action="" onSubmit={handleSubmit} style={{textAlign:'center'}}>
+            <select name="emoji" value={inputs?.emoji || ''} onChange={handleChange}>
+              <option value="😂">😂</option>
+              <option value="🤨">🤨</option>
+              <option value="😎">😎</option>
+              <option value="❤️‍🔥">❤️‍🔥</option>
+              <option value="😞">😞</option>
+              <option value="🤬">🤬</option>
+            </select>
             <TextField
               size="small"
               sx={{ m: 3 }}
@@ -153,7 +132,6 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
         </div>
       </div>
     )
-  );
-}
+  );}
 
 export default ExpandedCard;
