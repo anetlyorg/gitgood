@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const fetch = require('node-fetch');
 
 const GithubOAuthController = {};
 
@@ -8,8 +8,8 @@ GithubOAuthController.getToken = async (req, res, next) => {
 
   try {
     const tokenJSON = await fetch(url, {
-      method: "post",
-      headers: { Accept: "application/json" },
+      method: 'post',
+      headers: { Accept: 'application/json' },
     });
     const token = await tokenJSON.json();
     res.locals.access_token = token.access_token;
@@ -18,19 +18,19 @@ GithubOAuthController.getToken = async (req, res, next) => {
     return next({
       log: `Error in OAuthController.getToken Err: ${err.message}`,
       status: 500,
-      message: { err: "An error occurred" },
+      message: { err: 'An error occurred' },
     });
   }
 };
 
 GithubOAuthController.getProfile = async (req, res, next) => {
-  const url = "https://api.github.com/user";
+  const url = 'https://api.github.com/user';
   try {
     const profileInfoJSON = await fetch(url, {
-      method: "get",
+      method: 'get',
       headers: {
-        Accept: "application/json",
-        Authorization: "token " + res.locals.access_token,
+        Accept: 'application/json',
+        Authorization: 'token ' + res.locals.access_token,
       },
     });
     const profileInfo = await profileInfoJSON.json();
@@ -40,7 +40,7 @@ GithubOAuthController.getProfile = async (req, res, next) => {
     return next({
       log: `Error in OAuthController.getProfile Err: ${err.message}`,
       status: 500,
-      message: { err: "An error occurred" },
+      message: { err: 'An error occurred' },
     });
   }
 };

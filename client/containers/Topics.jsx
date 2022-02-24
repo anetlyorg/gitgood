@@ -70,7 +70,7 @@ function Topics() {
   };
 
   return (
-    <div className="Nav">
+    <div className="CardContainer">
       <h2>Topics</h2>
       <form action="" onSubmit={handleSubmit}>
         <TextField
@@ -93,8 +93,9 @@ function Topics() {
         </Button>
       </form>
       <br></br>
-      {topicsFeed}
-      {/* {topicsOrder.map((topic_id) => (
+      <div className='topicsContainer'>
+        {topicsFeed}
+        {/* {topicsOrder.map((topic_id) => (
         <Topic
           key={topic_id}
           topic_id={topic_id}
@@ -104,6 +105,7 @@ function Topics() {
           topicsOrder={topicsOrder}
         />
       ))} */}
+      </div>
     </div>
   );
 }
