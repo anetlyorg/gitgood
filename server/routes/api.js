@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/topic',
   sessionController.isLoggedIn,
   topicController.getTopics,
-  (req, res) => res.status(200).json(res.locals.topics)
+  (req, res) => res.status(200).json(res.locals)
 );
 
 router.post('/topic/',
@@ -19,7 +19,7 @@ router.post('/topic/',
   (req, res) => res.status(200).json(res.locals.topic)
 );
 
-router.delete('/topic/:id',
+router.delete('/topic/:id/:order',
   sessionController.isLoggedIn,
   topicController.deleteTopic,
   (req, res) => res.status(200).json(res.locals.topic)
@@ -38,7 +38,7 @@ router.post('/subtopic/',
   (req, res) => res.status(200).json(res.locals.subtopic)
 );
 
-router.delete('/subtopic/:id',
+router.delete('/subtopic/:id/:order',
   sessionController.isLoggedIn,
   subtopicController.deleteSubtopic,
   (req, res) => res.status(200).json(res.locals.subtopic)

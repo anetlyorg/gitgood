@@ -1,4 +1,4 @@
-const db = require("../db/db");
+const db = require('../db/db');
 
 const userController = {};
 
@@ -8,8 +8,8 @@ userController.addUser = async (req, res, next) => {
   const token = res.locals.access_token;
   try {
     const sqlQuery = `
-    INSERT INTO Users (username, email, token)
-    VALUES($1,$2, $3) 
+    INSERT INTO Users (username, email, token, topics_order)
+    VALUES($1, $2, $3, ARRAY[]::integer[]) 
     ON CONFLICT (username) DO UPDATE
     SET token = EXCLUDED.token;
     `;
@@ -20,7 +20,7 @@ userController.addUser = async (req, res, next) => {
       log: `Cannot add user to database 
       (userController.addUser) Err: ${err.message}`,
       status: 400,
-      message: { err: "An error occurred" },
+      message: { err: 'An error occurred' },
     });
   }
 };

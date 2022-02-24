@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
-import { TextField } from "@mui/material";
-import { Button } from "@mui/material";
-import { TopicContext } from "../App";
+import React, { useState, useEffect, useContext } from 'react';
+import { TextField } from '@mui/material';
+import { Button } from '@mui/material';
+import { TopicContext } from '../App';
 
 function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
   //1) Configure inputs
@@ -27,10 +27,10 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
 
   //2) Add a card
   const addCard = () => {
-    fetch("http://localhost:3000/api/subtopic/", {
-      method: "Post",
+    fetch('http://localhost:3000/api/subtopic/', {
+      method: 'Post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         topic_id: currentTopicId,
@@ -47,10 +47,10 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
 
   //3) Update a card
   const updateCard = (card_id) => {
-    fetch("http://localhost:3000/api/subtopic/", {
-      method: "PUT",
+    fetch('http://localhost:3000/api/subtopic/', {
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         _id: currentCard.id,
@@ -87,8 +87,8 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
               placeholder="Select emoji..."
               name="emoji"
               onChange={handleChange}
-              value={inputs?.emoji || ""}
-            />{" "}
+              value={inputs?.emoji || ''}
+            />{' '}
             <TextField
               size="small"
               sx={{ m: 3 }}
@@ -97,7 +97,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
               placeholder="Add subtopic title..."
               name="title"
               onChange={handleChange}
-              value={inputs?.title || ""}
+              value={inputs?.title || ''}
             />
             <br></br>
             <textarea
@@ -106,7 +106,7 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
               placeholder="Add subtopic body..."
               name="text"
               onChange={handleChange}
-              value={inputs?.text || ""}
+              value={inputs?.text || ''}
             />
             <br></br>
             <Button

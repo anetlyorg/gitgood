@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@mui/material';
 
 function Card({ card, setCurrentCard, cards, setCards }) {
   //1) Config popup with card data
@@ -14,10 +14,14 @@ function Card({ card, setCurrentCard, cards, setCards }) {
 
   //2) Delete a card
   const deleteCard = (card_id) => {
-    fetch(`http://localhost:3000/api/subtopic/${card_id}`, {
-      method: "DELETE",
+    const newSubtopicsOrder = subtopicsOrder.slice();
+    newSubtopicsOrder.splice(subtopicsOrder.indexOf(Number(card_id)), 1);
+    console.log('new order', newSubtopicsOrder);
+    
+    fetch(`http://localhost:3000/api/subtopic/${card_id}/${JSON.stringify(newSubtopicsOrder)}`, {
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((data) => data.json())
@@ -34,10 +38,10 @@ function Card({ card, setCurrentCard, cards, setCards }) {
 
   return (
     <div className="Card">
-      <h3 onClick={handleClick} style={{ cursor: "pointer" }}>
+      <h3 onClick={handleClick} style={{ cursor: 'pointer' }}>
         {card.title}
       </h3>
-      <p>{card.emoji + " " + card.text}</p>
+      <p>{card.emoji + ' ' + card.text}</p>
       <Button
         className="cardButton"
         variant="text"
