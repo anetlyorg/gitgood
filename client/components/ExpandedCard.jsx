@@ -93,10 +93,10 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
           </Button>
           <form className="emojiform" action="" onSubmit={handleSubmit} style={{textAlign:'center'}}>
             <select name="emoji" value={inputs?.emoji || ''} onChange={handleChange}>
-              <option value="😂">😂</option>
+              <option value="❤️‍🔥">❤️‍🔥</option>
               <option value="🤨">🤨</option>
               <option value="😎">😎</option>
-              <option value="❤️‍🔥">❤️‍🔥</option>
+              <option value="😂">😂</option>
               <option value="😞">😞</option>
               <option value="🤬">🤬</option>
             </select>
