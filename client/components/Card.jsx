@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 
-function Card({ card, setCurrentCard, cards, setCards }) {
+function Card({ card, setCurrentCard, index }) {
   //1) Config popup with card data
   function handleClick() {
     setCurrentCard({
@@ -11,7 +11,7 @@ function Card({ card, setCurrentCard, cards, setCards }) {
       text: card.text,
     });
   }
-
+  console.log('subtopic card', card, setCurrentCard);
   //2) Delete a card
   const deleteCard = (card_id) => {
     const newSubtopicsOrder = subtopicsOrder.slice();
@@ -38,10 +38,13 @@ function Card({ card, setCurrentCard, cards, setCards }) {
 
   return (
     <div className="Card">
-      <h3 onClick={handleClick} style={{ cursor: 'pointer' }}>
-        {card.title}
-      </h3>
-      <p>{card.emoji + ' ' + card.text}</p>
+      {card && <div className="waiting">
+        <h3 onClick={handleClick} style={{ cursor: 'pointer' }}>
+          {card.title}
+        </h3>
+        <p>{card.emoji + ' ' + card.text}</p>
+      </div>}
+     
       <Button
         className="cardButton"
         variant="text"

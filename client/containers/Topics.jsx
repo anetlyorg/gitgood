@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Topic from '../components/Topic.jsx';
 import { Button } from '@mui/material';
 import { TextField } from '@mui/material';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function Topics() {
   //1) Get topics
@@ -31,15 +32,24 @@ function Topics() {
   const topicsFeed = [];
   for (const topic_id in topics) {
     topicsFeed.push(
-      <Topic
-        key={topic_id}
-        topic_id={topic_id}
-        topic={topics[topic_id]}
-        setTopics={setTopics}
-        topics={topics}
-        topicsOrder={topicsOrder}
-        setTopicsOrder={setTopicsOrder}
-      />
+      <Draggable draggableId={topic_id} index={Number(topic_id)}>
+        {(provided) => (
+          <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+            <Topic
+              key={topic_id}
+              topic_id={topic_id}
+              topic={topics[topic_id].topic_name}
+              setTopics={setTopics}
+              topics={topics}
+              topicsOrder={topicsOrder}
+              setTopicsOrder={setTopicsOrder}
+              subtopics={subtopics}
+              subtopicsOrder={topics[topic_id].subtopics_order}
+            />
+          </div>
+        )}
+      </Draggable>
+      
     );
   }
 
@@ -69,6 +79,10 @@ function Topics() {
       });
   };
 
+  const onDragEnd = (result) => {
+
+  };
+
   return (
     <div className="CardContainer">
       <h2>Topics</h2>
@@ -93,9 +107,17 @@ function Topics() {
         </Button>
       </form>
       <br></br>
-      <div className='topicsContainer'>
-        {topicsFeed}
-        {/* {topicsOrder.map((topic_id) => (
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId='all-topics'>
+          {(provided) => (
+            <div 
+              ref={provided.innerRef} 
+              {...provided.droppableProps} 
+              direction='horizontal'
+              type='column'
+              className='topicsContainer'>
+              {topicsFeed}
+              {/* {topicsOrder.map((topic_id) => (
         <Topic
           key={topic_id}
           topic_id={topic_id}
@@ -105,7 +127,11 @@ function Topics() {
           topicsOrder={topicsOrder}
         />
       ))} */}
-      </div>
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 }

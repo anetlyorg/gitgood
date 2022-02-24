@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import Topics from "./Topics.jsx";
-import Subtopics from "./Subtopics.jsx";
-import GithubLogin from "../components/GithubLogin";
-import { TopicContext } from "../App.jsx";
+import React, { useContext } from 'react';
+import Topics from './Topics.jsx';
+import Subtopics from './Subtopics.jsx';
+import GithubLogin from '../components/GithubLogin';
+import { TopicContext } from '../App.jsx';
 
 function Dashboard() {
   return (
@@ -18,7 +18,7 @@ function Dashboard() {
       </header>
       <div className="containers">
         <Topics />
-        <Subtopics />
+        {/* <Subtopics /> */}
       </div>
     </div>
   );

@@ -13,20 +13,20 @@ function Subtopics() {
 
   const { currentTopicId } = useContext(TopicContext);
 
-  useEffect(() => {
-    getCards();
-  }, [currentTopicId]);
+  // useEffect(() => {
+  //   getCards();
+  // }, [currentTopicId]);
 
-  function getCards() {
-    const url = `http://localhost:3000/api/subtopic/${currentTopicId}`;
-    console.log(url);
+  // function getCards() {
+  //   const url = `http://localhost:3000/api/subtopic/${currentTopicId}`;
+  //   console.log(url);
 
-    fetch(url)
-      .then((data) => data.json())
-      .then((data) => {
-        setCards(data);
-      });
-  }
+  //   fetch(url)
+  //     .then((data) => data.json())
+  //     .then((data) => {
+  //       setCards(data);
+  //     });
+  // }
 
   const cardsFeed = [];
   for (let i = 0; i < cards.length; i++) {

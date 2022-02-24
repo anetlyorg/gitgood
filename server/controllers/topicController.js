@@ -13,6 +13,7 @@ topicController.getTopics = (req, res, next) => {
       const result = {};
       payload.rows.forEach((curr) => {
         result[curr._id] = curr.topic_name;
+        result[curr._id] = curr;
       });
       res.locals.topics = result;
       db.query(userGetQuery, [username])

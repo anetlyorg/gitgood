@@ -1,9 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from '@mui/material';
 import { TopicContext } from '../App';
 
-function Topic({ topic_id, topic, setTopics, topics, topicsOrder, setTopicsOrder }) {
+import Card from './Card.jsx';
+import ExpandedCard from './ExpandedCard.jsx';
+
+function Topic({ topic_id, topic, setTopics, topics, topicsOrder, setTopicsOrder, subtopics, subtopicsOrder }) {
   const { setCurrentTopicId } = useContext(TopicContext);
+
+  const [currentCard, setCurrentCard] = useState(null);
 
   const deleteTopic = (topic_id) => {
     const newTopicsOrder = topicsOrder.slice();
@@ -23,6 +28,22 @@ function Topic({ topic_id, topic, setTopics, topics, topicsOrder, setTopicsOrder
     });
   };
 
+  const cardsFeed = [];
+  subtopicsOrder.forEach((sub, index) => {
+    console.log('card', subtopics[sub]);
+    cardsFeed.push(
+      <Card
+        key={sub}
+        card={subtopics[sub]}
+        setCurrentCard={setCurrentCard}
+        // cards={cards}
+        // setCards={setCards}
+        index={index}
+      />
+    );
+  }); 
+  
+
   return (
     <div className="Topic">
       <h3 style={{ cursor: 'pointer' }}>
@@ -36,7 +57,43 @@ function Topic({ topic_id, topic, setTopics, topics, topicsOrder, setTopicsOrder
           X
         </Button>
       </h3>
+      <div className="subtopicsContainer">
+        {subtopicsOrder && subtopicsOrder.map((sub, index) => {
+          console.log('card', subtopics[sub]);
+          return (
+            <div key={sub} className="CardContainer">
+              <Button
+                variant="contained"
+                size="small"
+                className="addSubtopic"
+                onClick={() => {
+                  setCurrentCard({});
+                }}
+              >
+                Add Subtopic
+              </Button>
+              <Card
+                // key={sub}
+                card={subtopics[sub]}
+                setCurrentCard={setCurrentCard}
+                // cards={cards}
+                // setCards={setCards}
+                index={index}
+              />
+            </div>
+          );
+        })}
+        {/* {cardsFeed} */}
+
+        <ExpandedCard
+          currentCard={currentCard}
+          setCurrentCard={setCurrentCard}
+          // cards={cards}
+          // setCards={setCards}
+        />
+      </div>
     </div>
+    
   );
 }
 
