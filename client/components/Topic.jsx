@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react';
 import { Button } from '@mui/material';
 import { TopicContext } from '../App';
 
+import { Droppable } from 'react-beautiful-dnd';
+
 import Card from './Card.jsx';
 import ExpandedCard from './ExpandedCard.jsx';
 
@@ -21,6 +23,7 @@ function Topic({ topic_id, topic, setTopics, topics, topicsOrder, setTopicsOrder
         'Content-Type': 'application/json',
       },
     }).then((data) => {
+      console.log(data);
       const topicsCopy = { ...topics };
       delete topicsCopy[topic_id];
       setTopics(topicsCopy);
@@ -58,36 +61,52 @@ function Topic({ topic_id, topic, setTopics, topics, topicsOrder, setTopicsOrder
         </Button>
       </h3>
       <div className="subtopicsContainer">
-        {subtopicsOrder && subtopicsOrder.map((sub, index) => {
-          console.log('card', subtopics[sub]);
-          return (
-            <div key={sub} className="CardContainer">
-              <Button
-                variant="contained"
-                size="small"
-                className="addSubtopic"
-                onClick={() => {
-                  setCurrentCard({});
-                }}
-              >
+        <Droppable droppableId={topic_id.toString()}>
+          {(provided, snapshot) => (
+            <div
+              className="subtopicsDroppable"
+              ref={provided.innerRef}
+              {...provided.droppableProps}>
+              {subtopicsOrder && subtopicsOrder.map((sub, index) => {
+                console.log('card', subtopics[sub]);
+                return (
+                  <div key={sub} className="CardContainer">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      className="addSubtopic"
+                      onClick={() => {
+                        setCurrentCard({});
+                      }}
+                    >
                 Add Subtopic
-              </Button>
-              <Card
-                // key={sub}
-                card={subtopics[sub]}
-                setCurrentCard={setCurrentCard}
-                // cards={cards}
-                // setCards={setCards}
-                index={index}
-              />
+                    </Button>
+                    <Card
+                    // key={sub}
+                      card={subtopics[sub]}
+                      setCurrentCard={setCurrentCard}
+                      // cards={cards}
+                      // setCards={setCards}
+                      index={index}
+                    />
+                  </div>
+                );
+              })}
+              {provided.placeholder}
             </div>
-          );
-        })}
+          )}
+          
+        </Droppable>
+        
+        
         {/* {cardsFeed} */}
 
         <ExpandedCard
           currentCard={currentCard}
           setCurrentCard={setCurrentCard}
+          currentTopicId={topic_id}
+          subtopics={subtopics}
+          subtopicsOrder={subtopicsOrder}
           // cards={cards}
           // setCards={setCards}
         />

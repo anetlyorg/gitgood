@@ -113,4 +113,33 @@ topicController.deleteTopic = (req, res, next) => {
     });
 };
 
+topicController.newTopicsOrder = (req, res, next) => {
+  const username = res.locals.username;
+  let { order } = req.params;
+  console.log('delete', username, typeof order);
+  order = JSON.parse(order);
+  console.log(typeof order, typeof order[0]);
+  console.log('delete', username, order);
+      
+  const sqlQuery = 'UPDATE users SET topics_order = $2::integer[] WHERE username = $1 RETURNING *';
+    
+  db.query(sqlQuery, [username, order])
+    .then((userPayload) => {
+      console.log('payload 2', userPayload.rows[0]);
+      // check next line - was singular, changed to plural
+      res.locals.topicsOrder = userPayload.rows[0].topics_order;
+      return next();
+    })
+    .catch((err) => {
+      return next({
+        log: `topicController.newTopicsOrder: ERROR: ${
+          typeof err === 'object' ? JSON.stringify(err) : err
+        }`,
+        message: {
+          err: 'Error occurred in topicController.newTopicsOrder. Check server log for more details.',
+        },
+      });
+    });
+};
+
 module.exports = topicController;

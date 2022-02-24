@@ -25,6 +25,12 @@ router.delete('/topic/:id/:order',
   (req, res) => res.status(200).json(res.locals.topic)
 );
 
+router.put('/topic/newOrder/:order',
+  sessionController.isLoggedIn,
+  topicController.newTopicsOrder,
+  (req, res) => res.status(200).json(res.locals.topic)
+);
+
 // SUBTOPIC - CRUD routes
 router.get('/subtopic/:topic_id',
   sessionController.isLoggedIn,
@@ -48,6 +54,12 @@ router.put('/subtopic/',
   sessionController.isLoggedIn,
   subtopicController.putSubtopic,
   (req, res) => res.status(200).json(res.locals.subtopic)
+);
+
+router.put('/subtopic/newOrderOne/:id/:order',
+  sessionController.isLoggedIn,
+  subtopicController.newOrderOne,
+  (req, res) => res.status(200).json(res.locals.topic)
 );
 
 module.exports = router;

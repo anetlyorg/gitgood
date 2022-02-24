@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
+import { Draggable } from 'react-beautiful-dnd';
 
 function Card({ card, setCurrentCard, index }) {
   //1) Config popup with card data
@@ -39,10 +40,20 @@ function Card({ card, setCurrentCard, index }) {
   return (
     <div className="Card">
       {card && <div className="waiting">
-        <h3 onClick={handleClick} style={{ cursor: 'pointer' }}>
-          {card.title}
-        </h3>
-        <p>{card.emoji + ' ' + card.text}</p>
+        <Draggable draggableId={card._id.toString()} index={index}>
+          {(provided) => (
+            <div 
+              className='draggableCard'
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              ref={provided.innerRef}>
+              <h3 onClick={handleClick} style={{ cursor: 'pointer' }}>
+                {card.title}
+              </h3>
+              <p>{card.emoji + ' ' + card.text}</p>
+            </div>
+          )}
+        </Draggable>
       </div>}
      
       <Button

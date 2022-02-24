@@ -6,7 +6,7 @@ import { TopicContext } from '../App';
 function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
   //1) Configure inputs
   const [inputs, setInputs] = useState(currentCard);
-  const { currentTopicId } = useContext(TopicContext);
+  // const { currentTopicId } = useContext(TopicContext);
 
   const handleChange = (e) => {
     const name = e.target.name;

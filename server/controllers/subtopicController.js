@@ -120,4 +120,29 @@ subtopicController.putSubtopic = (req, res, next) => {
     });
 };
 
+subtopicController.newOrderOne = (req, res, next) => {
+  const { id, order } = req.params;
+  const parsedOrder = JSON.parse(order);
+      
+  const sqlQuery = 'UPDATE topics SET subtopics_order = $2::integer[] WHERE _id = $1 RETURNING *';
+    
+  db.query(sqlQuery, [id, parsedOrder])
+    .then((topicPayload) => {
+      console.log('payload 2', topicPayload.rows[0]);
+      // check next line - was singular, changed to plural
+      res.locals.subtopicsOrder = topicPayload.rows[0].subtopics_order;
+      return next();
+    })
+    .catch((err) => {
+      return next({
+        log: `subtopicController.newOrderOne: ERROR: ${
+          typeof err === 'object' ? JSON.stringify(err) : err
+        }`,
+        message: {
+          err: 'Error occurred in subtopicController.newOrderOne. Check server log for more details.',
+        },
+      });
+    });
+};
+
 module.exports = subtopicController;
