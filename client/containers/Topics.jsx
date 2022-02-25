@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Topic from '../components/Topic.jsx';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { TextField } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -29,30 +29,32 @@ function Topics() {
       .catch((err) => console.log('err', err));
   }
 
-  const topicsFeed = [];
-  topicsOrder.forEach((topic_id, index) => {
-    // for (const topic_id in topics) {
-    topicsFeed.push(
-      <Draggable draggableId={topic_id} index={index}>
-        {(provided) => (
-          <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-            <Topic
-              key={topic_id}
-              topic_id={topic_id}
-              topic={topics[topic_id].topic_name}
-              setTopics={setTopics}
-              topics={topics}
-              topicsOrder={topicsOrder}
-              setTopicsOrder={setTopicsOrder}
-              subtopics={subtopics}
-              subtopicsOrder={topics[topic_id].subtopics_order}
-            />
-          </div>
-        )}
-      </Draggable>
-    );
-    // }
-  });
+  // const topicsFeed = [];
+  // topicsOrder.forEach((topic_id, index) => {
+  //   // for (const topic_id in topics) {
+  //   topicsFeed.push(
+  //     <Draggable draggableId={topic_id} index={index}>
+  //       {(provided, snapshot)=> (
+  //         <div className='TopicDiv'{...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+  //           <Topic
+  //             key={topic_id}
+  //             isDragging={snapshot.isDragging}
+  //             topic_id={topic_id}
+  //             topic={topics[topic_id].topic_name}
+  //             setTopics={setTopics}
+  //             topics={topics}
+  //             topicsOrder={topicsOrder}
+  //             setTopicsOrder={setTopicsOrder}
+  //             subtopics={subtopics}
+  //             setSubtopics={setSubtopics}
+  //             subtopicsOrder={topics[topic_id].subtopics_order}
+  //           />
+  //         </div>
+  //       )}
+  //     </Draggable>
+  //   );
+  //   // }
+  // });
   
 
   //2) Handle new topic
@@ -183,8 +185,8 @@ function Topics() {
   };
 
   return (
-    <div className="CardContainer">
-      <h2>Topics</h2>
+    <div className='mainContainer'>
+      <Typography variant='h3'>Your Topics</Typography>
       <form action="" onSubmit={handleSubmit}>
         <TextField
           sx={{ m: 0.5 }}
@@ -219,10 +221,10 @@ function Topics() {
               {/* {topicsFeed} */}
               {topicsOrder.map((topic_id, index) => (
                 <Draggable draggableId={topic_id.toString()} index={index} key={topic_id}>
-                  {(provided) => (
+                  {(provided, snapshot) => (
                     <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                       <Topic
-                        key={topic_id}
+                        key={`topic ${topic_id}`}
                         topic_id={topic_id}
                         topic={topics[topic_id].topic_name}
                         setTopics={setTopics}
@@ -230,7 +232,9 @@ function Topics() {
                         topicsOrder={topicsOrder}
                         setTopicsOrder={setTopicsOrder}
                         subtopics={subtopics}
+                        setSubtopics={setSubtopics}
                         subtopicsOrder={topics[topic_id].subtopics_order}
+                        isDragging={snapshot.isDragging}
                       />
                     </div>
                   )}

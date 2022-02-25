@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import { TopicContext } from '../App';
 
-function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
+function ExpandedCard({ currentCard, setCurrentCard, currentTopicId, subtopics, setSubtopics, currSubtopicsOrder, setCurrSubtopicsOrder }) {
   //1) Configure inputs
   const [inputs, setInputs] = useState(currentCard);
   // const { currentTopicId } = useContext(TopicContext);
@@ -41,7 +41,13 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
     })
       .then((newCardJSON) => newCardJSON.json())
       .then((newCard) => {
-        setCards([...cards, newCard]);
+        console.log('new card', newCard);
+        console.log(subtopics, 'new subtopics', {...subtopics, [newCard._id]: newCard});
+        const newSubtopics = {...subtopics, [newCard._id]: newCard};
+        setSubtopics(newSubtopics);
+        console.log('not reaching here', currSubtopicsOrder, 'order', [...currSubtopicsOrder, newCard._id]);
+        setCurrSubtopicsOrder([...currSubtopicsOrder, newCard._id]);
+        // setCards([...cards, newCard]);
       });
   };
 
@@ -61,19 +67,23 @@ function ExpandedCard({ currentCard, setCurrentCard, setCards, cards }) {
     })
       .then((updatedCardJSON) => updatedCardJSON.json())
       .then((updatedCard) => {
-        const cardsCopy = [...cards];
-        let index;
-        cardsCopy.forEach((card, i) => {
-          if (card._id === currentCard.id) index = i;
-        });
-        cardsCopy[index] = updatedCard;
-        setCards(cardsCopy);
+        console.log('updated card', updatedCard);
+        console.log(subtopics, 'updated subtopics', {...subtopics, [updatedCard._id]: updatedCard});
+        const updatedSubtopics = {...subtopics, [updatedCard._id]: updatedCard};
+        setSubtopics(updatedSubtopics);
+        // const cardsCopy = [...cards];
+        // let index;
+        // cardsCopy.forEach((card, i) => {
+        //   if (card._id === currentCard.id) index = i;
+        // });
+        // cardsCopy[index] = updatedCard;
+        // setCards(cardsCopy);
       });
   };
 
   return (
     currentCard && (
-      <div className="ExpandedCard">
+      <div className="ExpandedCard" style={{zIndex:100}}>
         <div className="ExpandedCard-inner">
           <Button className="close-btn" onClick={() => setCurrentCard(null)}>
             close

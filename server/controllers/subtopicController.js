@@ -25,6 +25,7 @@ subtopicController.getSubtopics = (req, res, next) => {
 };
 
 subtopicController.postSubtopic = (req, res, next) => {
+  const username = res.locals.username;
   let { topic_id, emoji, title, text, progress } = req.body;
   console.log('topic id', topic_id);
   //Set default values for empty subtopic fields
@@ -33,11 +34,11 @@ subtopicController.postSubtopic = (req, res, next) => {
   text = text || '';
   progress = progress || 0;
 
-  const sqlQuery = `INSERT INTO subtopics (topic_id, emoji, title, text, progress) 
-    VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+  const sqlQuery = `INSERT INTO subtopics (topic_id, emoji, title, text, progress, users_username) 
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
   const topicQuery = 'UPDATE topics SET subtopics_order = subtopics_order || ARRAY[$2]::integer[] WHERE _id = $1 RETURNING *';
 
-  db.query(sqlQuery, [topic_id, emoji, title, text, progress])
+  db.query(sqlQuery, [topic_id, emoji, title, text, progress, username])
     .then((payload) => {
       res.locals.subtopic = payload.rows[0];
       db.query(topicQuery, [topic_id, payload.rows[0]._id])
@@ -71,7 +72,7 @@ subtopicController.deleteSubtopic = (req, res, next) => {
     .then((payload) => {
       res.locals.subtopic = payload.rows[0];
       console.log('payload 1', payload.rows[0]);
-      db.query(topicDelQuery, [payload.rows[0]._id, parsedOrder])
+      db.query(topicDelQuery, [payload.rows[0].topic_id, parsedOrder])
         .then((topicPayload) => {
           console.log('payload 2', topicPayload.rows[0]);
           // check next line - was singular, changed to plural

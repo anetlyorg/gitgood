@@ -5,8 +5,11 @@
 }
 
 .App {
-  background-color: white;
-  margin: 1rem;
+  background-color: #616161;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100vh;
 }
 
 .GitHub {
@@ -16,6 +19,9 @@
 
 .Dashboard {
   text-align: center;
+  width: 100%;
+  margin-top: 20px;
+  // height: 100%;
 }
 
 .GitGoodTitle {
@@ -35,6 +41,10 @@ header {
 
 .containers {
   display: flex;
+  width: 100%;
+  background-color: #616161;
+
+  // height: 100%;
 }
 
 .Nav {
@@ -48,35 +58,48 @@ header {
 }
 
 .CardContainer {
-  outline: 2px solid #1976d2;
+  // outline: 2px solid #1976d2;
   border-radius: 10px;
   padding: 25px 50px;
-  width: 65%;
+  width: 100%;
   background-color: white;
-  margin-left: 10px;
+  // margin: 10px;
+  // flex: 1;
 }
 
-.Card {
-  display: flex;
-  flex-direction: column;
-  outline: 1px solid #1976d2;
-  margin: 5px;
-  border-radius: 10px;
-  background-color: white;
-  position: relative;
-  box-shadow: 5px 5px 5px 1px #dae1e7;
+.subtopicsContainer {
+  // display: flex;
+  justify-content: space-between;
+  // grid-template-columns: 1fr 1fr 1fr 1fr;
+  //   flex-direction: row;
+  //   flex-wrap: wrap;
+  width: 100%;
+  margin: 4px;
 }
+
+
+// .Card {
+//   display: flex;
+//   flex-direction: column;
+//   outline: 1px solid #1976d2;
+//   margin: 5px;
+//   width: 80%;
+//   border-radius: 10px;
+//   background-color: white;
+//   position: relative;
+//   box-shadow: 5px 5px 5px 1px #dae1e7;
+// }
 
 .Topic {
   display: flex;
   flex-direction: column;
   text-align: left;
-  padding-left: 20px;
+  padding: 20px;
   outline: 1px solid #1976d2;
   border-radius: 10px;
-  margin-top: 10px;
+  margin: 20px;
   background-color: white;
-  max-width: 300px;
+  width: 500px;
   box-shadow: 5px 5px 5px 1px #dae1e7;
 }
 
@@ -105,20 +128,17 @@ header {
 
 .topicsContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   // grid-template-columns: 1fr 1fr 1fr 1fr;
   //   flex-direction: row;
   //   flex-wrap: wrap;
   margin: 4px;
 }
 
-.subtopicsContainer {
-  display: flex;
-  justify-content: space-between;
-  // grid-template-columns: 1fr 1fr 1fr 1fr;
-  //   flex-direction: row;
-  //   flex-wrap: wrap;
-  margin: 4px;
+.mainContainer {
+  width: 100%;
+  background-color: #bdbdbd;
+  opacity: 0.8;
 }
 
 .ExpandedCard {
