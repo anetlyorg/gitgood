@@ -1,3 +1,1 @@
-# scratch
-
-#LETS GET IT TEAM!!!!!
+# GitGood v1.1.0
