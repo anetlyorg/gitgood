@@ -4,6 +4,24 @@ const db = require('../server/db/db');
 const { query } = require('express');
 import regeneratorRuntime from 'regenerator-runtime';
 
+const usernames = [
+  'franklysa',
+  'jimmeyboysa',
+  'billysa',
+  'teddysonsa',
+  'barneysona',
+  'someotherguysona',
+];
+const topics = ['cool', 'nice', 'test', 'alright', 'yeah', 'woop'];
+const subtopics = [
+  'momma',
+  'dadda',
+  'big toe',
+  'long grain rice',
+  'shampoo',
+  'brown eggs',
+];
+const randomizer = () => Math.floor(Math.random() * 6);
 /**
  * Like many testing frameworks, in Jest we use the "describe" function to
  * separate our tests into sections. They make your test outputs readable.
@@ -21,41 +39,122 @@ describe('db unit tests', () => {
    * reset to an empty Array!
    */
 
-   beforeAll(done => {
-    done()
-  })
-  
-  // afterAll(done => {
+  // beforeAll((done) => {
+  //   done();
+  // });
+
+  // afterAll((done) => {
   //   // Closing the DB connection allows Jest to exit successfully.
-  //   db.connection.close()
-  //   done()
-  // })
+  //   //db.connection.close();
+  //   done();
+  // });
 
   describe('#sync', () => {
-    it('db test is working', () => {
-      const sqlQuery = `SELECT * FROM Users`;
+    const user = usernames[randomizer()];
+    const topic = topics[randomizer()];
+    const subtopic = subtopics[randomizer()];
+    it('db user GET test is working', async () => {
+      try {
+        const sqlQuery = `SELECT * FROM Users`;
 
-      db.query(sqlQuery,[],(err, result) => {
-        // console.log(result)
-        return expect(typeof result).toEqual('object');
-      }); 
-      
+        const result = await db.query(sqlQuery, []);
+        console.log("Here's the type of all users", typeof result);
+        expect(typeof result).toBe('object');
+      } catch (e) {
+        console.log(e);
+      }
     });
 
     // TODO: Finish unit testing the sync function
+    // ADDED:
+    //- unit tests for all other tables GET (topics, subtopics, )
+    it('db topic GET test is working', async () => {
+      try {
+        const sqlQuery = 'SELECT * FROM Topics';
 
-    // it('overwrites previously existing markets', () => {
-    //   const sqlQuery = `SELECT * FROM Users`;
-
-    //   // console.log(process.env.PG_URI);
-    //   return db.query(sqlQuery)
-    //     .then((data) => expect(typeof data).toBe('object'))
-    //     .finally((done)=>done());
-    // });
-
-    it('db test', () => {
-      
+        const result = await db.query(sqlQuery, []);
+        console.log("Here's the type of all topics: ", typeof result);
+        expect(typeof result).toBe('object');
+      } catch (e) {
+        console.log(e);
+      }
     });
 
+    it('db subtopic GET test is working', async () => {
+      try {
+        const sqlQuery = 'SELECT * FROM Subtopics';
+        const result = await db.query(sqlQuery, []);
+        console.log("Here's the type of all subtopics: ", typeof result);
+        expect(typeof result).toEqual('object');
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    // requires a unique username for each test :/
+    // xit('db user POST test is working', async () => {
+    //   const sqlQuery =
+    //     'INSERT INTO Users (username, email, token) VALUES($1,$2, $3)'; /*ON CONFLICT (username) DO UPDATESET token = EXCLUDED.token'*/
+    //   const result = await db.query(sqlQuery, [user, 'password', '123456']);
+    //   console.log("Here's the typeof this post request", typeof result);
+    //   expect(typeof result).toBe('object');
+    // });
+
+    it('db user POST / DELETE test is working', async () => {
+      try {
+        const sqlQueryAdd = `INSERT INTO Users (username, email, token) VALUES($1, $2, $3)`;
+        const sqlQueryDelete = `DELETE FROM Users WHERE username='${user}'`;
+        const result = await db
+          .query(sqlQueryAdd, [user, `${user}@gmail.com`, '123456'])
+          .then(await db.query(sqlQueryDelete, []));
+        expect(typeof result).toBe('object');
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    // db topis post / delete test
+    it('db topic POST / DELETE test is working', async () => {
+      try {
+        const sqlQueryAddTopic = `INSERT INTO topics (topic_name, username) VALUES ($1, $2) RETURNING *`;
+        const sqlQueryDeleteTopic = `DELETE FROM topics WHERE topic_name=$1`;
+        const result = await db
+          .query(sqlQueryAddTopic, [topic, 'test'])
+          .then(await db.query(sqlQueryDeleteTopic, [topic]));
+        expect(typeof result).toBe('object');
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    // db subtopic post / delete test
+    it('db subtopic POST / DELETE test is working', async () => {
+      try {
+        const sqlQueryAddSubtopic = `INSERT INTO subtopics (topic_id, title) VALUES($1, $2)`;
+        const sqlQueryDeleteSubtopic = `DELETE from subtopics WHERE title=$1`;
+        const result = await db
+          .query(sqlQueryAddSubtopic, [41, subtopic])
+          .then(await db.query(sqlQueryDeleteSubtopic, [subtopic]));
+        console.log(result);
+        expect(typeof result).toBe('object');
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    // db PUT test
+    it('db subtopic PUT test is working', async () => {
+      try {
+        const sqlQueryPutSubopic =
+          'UPDATE subtopics SET text=$1 WHERE title=$2';
+        const result = await db.query(sqlQueryPutSubopic, [
+          `testing put ${user}`,
+          'test',
+        ]);
+        expect(typeof result).toBe('object');
+      } catch (e) {
+        console.log(e);
+      }
+    });
   });
 });
